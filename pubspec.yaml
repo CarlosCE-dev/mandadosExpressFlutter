@@ -36,6 +36,7 @@ dependencies:
   mapbox_gl: ^0.9.0
   flare_flutter: ^2.0.6
   dio: ^3.0.10
+  signalr_client: ^0.1.6
 
 dev_dependencies:
   flutter_native_splash: ^0.1.9

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mandado_express_dev/services/signalRService.dart';
 
 // Lib
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider( create: (_) => AuthService() ),
         ChangeNotifierProvider( create: (_) => RoomService() ),
+        ChangeNotifierProvider( create: (_) => SignalRService() ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

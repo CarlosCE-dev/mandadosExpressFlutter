@@ -92,7 +92,7 @@ class RoomService with ChangeNotifier {
   // Get delivery users
   Future<List<UsersResponse>> getDeliveryUsers(  ) async {
 
-    final token = Enviroments.token;
+    final token = await AuthService.getToken();
 
     final resp = await http.get('${ Enviroments.apiUrl }/rooms/create', 
       headers: {
