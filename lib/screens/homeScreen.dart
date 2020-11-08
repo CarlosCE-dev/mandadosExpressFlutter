@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:mandado_express_dev/services/authService.dart';
 
 // Lib
 import 'package:provider/provider.dart';
@@ -28,6 +29,13 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: CustomColors.black,
         title: Text('Chats', style: TextStyle( color: Colors.white, fontWeight: FontWeight.w800, fontSize: 28.0)),
+        leading: IconButton(
+          icon: Icon( Icons.exit_to_app, color: Colors.white ),
+          onPressed: (){
+            Navigator.pushReplacementNamed(context, 'login');
+            AuthService.deleteToken();
+          },
+        ),
         actions: <Widget>[
           
         ],

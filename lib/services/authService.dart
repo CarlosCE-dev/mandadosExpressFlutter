@@ -170,6 +170,12 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  // Log out
+  void logOut() async {
+    await _eliminarToken();
+    this.user = new User();
+  }
+
   Future _guardarToken( String token ) async {
       return await _storage.write(key: 'token', value: token);
   }
