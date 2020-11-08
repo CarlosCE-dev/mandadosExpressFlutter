@@ -126,14 +126,13 @@ class __FormState extends State<_Form> {
               }
               errorMsg = "";
 
-              Navigator.pushReplacementNamed(context, 'usuario');
               FocusScope.of(context).unfocus();
               
               final response = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
               if ( response ){
                 // TODO: Conectar a nuestro socket server
                 // TODO: Navegar a otra pantala
-                Navigator.pushReplacementNamed(context, 'usuarios');
+                Navigator.pushReplacementNamed(context, 'home');
               } else {
                 showAlert(context, 'Login incorrecto', 'Revise sus credenciales nuevamante');
               }

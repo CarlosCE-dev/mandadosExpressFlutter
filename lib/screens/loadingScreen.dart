@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:mandado_express_dev/services/authService.dart';
 
 // Screens
+import 'package:mandado_express_dev/screens/homeScreen.dart';
 import 'package:mandado_express_dev/screens/loginScreen.dart';
-import 'package:mandado_express_dev/screens/registerScreen.dart';
 
 class LoadingScreen extends StatefulWidget {
 
@@ -69,7 +69,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => RegisterScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
           transitionDuration: Duration( milliseconds: 3000 ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeIn(
