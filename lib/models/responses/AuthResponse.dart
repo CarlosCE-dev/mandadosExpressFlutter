@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // Models
-import 'package:mandado_express_dev/models/User.dart';
+import 'package:mandado_express_dev/models/user.dart';
 
 AuthResponse authResponseFromJson(String str) => AuthResponse.fromJson(json.decode(str));
 

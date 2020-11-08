@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // Models
-import 'package:mandado_express_dev/models/Message.dart';
+import 'package:mandado_express_dev/models/message.dart';
 
 List<RoomResponse> roomResponseFromJson(String str) => List<RoomResponse>.from(json.decode(str).map((x) => RoomResponse.fromJson(x)));
 
