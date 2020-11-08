@@ -1,0 +1,4 @@
+enum MessageTypes {
+  Text,
+  Map
+}
