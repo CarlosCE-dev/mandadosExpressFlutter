@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 // Lib
@@ -8,13 +10,19 @@ import 'package:mandado_express_dev/global/environments.dart';
 
 // Models
 import 'package:mandado_express_dev/models/responses/roomResponse.dart';
+import 'package:mandado_express_dev/models/responses/userResponse.dart';
+import 'package:mandado_express_dev/models/view/chatViewModel.dart';
+import 'package:mandado_express_dev/services/authService.dart';
 
 class RoomService with ChangeNotifier {
 
+  ChatViewModel chat;
+
+  // Get rooms
   Future<List<RoomResponse>> getRooms(  ) async {
 
-    final token = Enviroments.token;
-
+    final token = await AuthService.getToken();
+    
     final resp = await http.get('${ Enviroments.apiUrl }/rooms', 
       headers: {
         'Content-Type': 'application/json',
@@ -31,11 +39,12 @@ class RoomService with ChangeNotifier {
 
   }
 
-  Future<bool> createRoom(  ) async {
-
-    final token = Enviroments.token;
-
-    final resp = await http.post('${ Enviroments.apiUrl }/rooms/create', 
+  // Create new room
+  Future<bool> getRoom( int roomId ) async {
+    
+    final token = await AuthService.getToken();
+    
+    final resp = await http.get('${ Enviroments.apiUrl }/rooms/$roomId', 
       headers: {
         'Content-Type': 'application/json',
         'Authorization': "Bearer $token"
@@ -43,12 +52,60 @@ class RoomService with ChangeNotifier {
     );
 
     if ( resp.statusCode == 200){
-      // final roomResponse = authResponseFromJson( resp.body );
+      final chatViewModel = chatViewModelFromJson(resp.body);
+      this.chat = chatViewModel;
       
       return true;
     } else {
       return false;
     }
 
+  }
+
+  // Create new room
+  Future<bool> createRoom( String deliveryId ) async {
+    
+    final token = await AuthService.getToken();
+    final payload = {
+      "deliveryId" : deliveryId
+    };
+
+    final resp = await http.post('${ Enviroments.apiUrl }/rooms/create', 
+      body: jsonEncode(payload),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer $token"
+      }
+    );
+
+    if ( resp.statusCode == 200){
+      final chatViewModel = chatViewModelFromJson(resp.body);
+      this.chat = chatViewModel;
+      
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  // Get delivery users
+  Future<List<UsersResponse>> getDeliveryUsers(  ) async {
+
+    final token = Enviroments.token;
+
+    final resp = await http.get('${ Enviroments.apiUrl }/rooms/create', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer $token"
+      }
+    );
+
+    if ( resp.statusCode == 200){
+      final roomResponse = usersResponseFromJson( resp.body );
+      return roomResponse;
+    } else {
+      return [];
+    }
   }
 }

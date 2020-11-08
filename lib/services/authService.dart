@@ -44,6 +44,9 @@ class AuthService with ChangeNotifier {
     this._autenticando = valor;
     notifyListeners();
   }
+
+  // Getter del user de forma estatica
+  String get getUserId => this.user.id;
   
   // Getter del token de forma estatica
   static Future<String> getToken() async {

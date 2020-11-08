@@ -77,8 +77,8 @@ class __FormState extends State<_Form> {
     emailCtrl.text = authService.user.email;
     passCtrl.text = authService.user.password;
 
-    emailCtrl.text = "test@test.com";
-    passCtrl.text = "Tenco12345_";
+    emailCtrl.text = "customer@customer.com";
+    passCtrl.text = "Tenco1234\$";
 
     return Container(
       margin: EdgeInsets.only( top:40 ),

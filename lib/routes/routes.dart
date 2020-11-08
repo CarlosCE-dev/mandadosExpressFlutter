@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 // Screen
+import 'package:mandado_express_dev/screens/chatScreen.dart';
+import 'package:mandado_express_dev/screens/deliveryScreen.dart';
 import 'package:mandado_express_dev/screens/homeScreen.dart';
 import 'package:mandado_express_dev/screens/loadingScreen.dart';
 import 'package:mandado_express_dev/screens/loginScreen.dart';
@@ -11,5 +13,6 @@ final Map<String, Widget Function(BuildContext)> appRoutes = {
   'register': (_) => RegisterScreen(),
   'home': (_) => HomeScreen(),
   'loading': (_) => LoadingScreen(),
-  // 'chat' : (_) => ChatScreen()
+  'delivery' : (_) => DeliveryScreen(),
+  'chat' : (_) => ChatScreen()
 };

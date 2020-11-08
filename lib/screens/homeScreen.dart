@@ -63,8 +63,7 @@ class HomeScreen extends StatelessWidget {
         child:IconButton(
           icon: Icon( Icons.add, color: Colors.white ),
           onPressed: () async {
-            final rooms = await roomService.getRooms();
-            print(rooms);
+            Navigator.pushNamed(context, 'delivery');
           },
         ),
       ),
@@ -96,8 +95,12 @@ class CustomListItem extends StatelessWidget {
       ),
     );
     return GestureDetector(
-      onTap: (){
-        // Navigator.pushNamed(context, 'chat', arguments: new Object( id: id, number: avatarNumber, randomNumber: number, usuario: room.name  ) );
+      onTap: () async {
+        final roomService = Provider.of<RoomService>(context, listen: false );
+        final roomResponse = await roomService.getRoom( room.id );
+        if ( roomResponse ){
+            Navigator.pushReplacementNamed(context, 'chat');
+        }
       },
       child: listItem,
     );
