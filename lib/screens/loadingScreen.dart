@@ -57,13 +57,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future checkLoginState( BuildContext context ) async {
-    final authService = Provider.of<AuthService>(context);
+
+    final authService = Provider.of<AuthService>(context, listen: false );
     
     await Future.delayed(Duration( seconds: 3 ) );
 
     final autenticado = await authService.isLoggedIn();
 
-    
     if ( autenticado ){
       // TODO: Conectar al socket server
       Navigator.pushReplacement(

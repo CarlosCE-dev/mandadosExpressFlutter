@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 // Lib
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 
 // Environments
 import 'package:mandado_express_dev/global/environments.dart';
@@ -19,12 +21,30 @@ class AuthService with ChangeNotifier {
 
   final _storage = FlutterSecureStorage();
 
+  Dio createDioInstance( String token ){
+    BaseOptions options = new BaseOptions(
+      baseUrl: Enviroments.apiUrl,
+      connectTimeout: 5000,
+      receiveTimeout: 3000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if ( token.isNotEmpty ) {
+      options.headers['Authorization'] = "Bearer $token";
+    }
+
+    Dio dio = new Dio(options);
+    return dio;
+  }
+
   bool get autenticando => this._autenticando;
   set autenticando( bool valor ){
     this._autenticando = valor;
     notifyListeners();
   }
-
+  
   // Getter del token de forma estatica
   static Future<String> getToken() async {
     final _storage = new FlutterSecureStorage(); 
@@ -38,27 +58,30 @@ class AuthService with ChangeNotifier {
     await _storage.delete(key: 'token');
   }
 
+  // [email]
   Future<bool> login( String email, String password ) async {
-
+    try {
     this.autenticando = true;
+
+    final _dio = createDioInstance("");
 
     final payload = {
       'email': email,
       'password': password
     };
 
-    final resp = await http.post('${ Enviroments.apiUrl }/authenticate/login', 
-      body: jsonEncode(payload),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    Response response = await _dio.post('/authenticate/login',
+        data: jsonEncode(payload), 
     );
 
+
     this.autenticando = false;
-    if ( resp.statusCode == 200){
-      final loginResponse = authResponseFromJson( resp.body );
+
+    if ( response.statusCode == 200){
+
+      AuthResponse loginResponse = AuthResponse.fromMap( response.data );
       this.user = loginResponse.user;
-      
+
       await this._guardarToken(loginResponse.token);
 
       return true;
@@ -66,68 +89,83 @@ class AuthService with ChangeNotifier {
       return false;
     }
 
+    } catch (e) {
+      // TODO: En caso de no poder logearse deberia notificar al usuario por X error
+      this.autenticando = false;
+      return false;
+    }
   }
 
   Future register( String firstName, String lastName, String email,  String password ) async {
-    this.autenticando = true;
+    try {
 
-    final payload = {
-      "firstName": firstName,
-      "lastName" : lastName,
-      "email" : email,
-      "password" : password,
-      "confirmPassword" : password
-    };
+      this.autenticando = true;
 
-    final resp = await http.post('${ Enviroments.apiUrl }/authenticate/register', 
-      body: jsonEncode(payload),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    );
+      final payload = {
+        "firstName": firstName,
+        "lastName" : lastName,
+        "email" : email,
+        "password" : password,
+        "confirmPassword" : password
+      };
 
-    this.autenticando = false;
+      final _dio = createDioInstance("");
 
-    if ( resp.statusCode == 200){
-
-      final User user = new User(
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password
+      Response response = await _dio.post('/authenticate/register',
+        data: jsonEncode(payload), 
       );
 
-      this.user = user;
-      
-      return true;
-    } else {
+      this.autenticando = false;
 
-      final loginResponse = authResponseFromJson( resp.body );
-      this.user = loginResponse.user;
-      // final respBody = jsonDecode(resp.body);
-      return "Error";
+      if ( response.statusCode == 200){
+
+        final User user = new User(
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password
+        );
+
+        this.user = user;
+        
+        return true;
+      } else {
+
+        // final respBody = jsonDecode(resp.body);
+        return "Error";
+      }
+
+    } catch (e) {
+      // TODO: En caso de no poder logearse deberia notificar al usuario por X error
+      this.autenticando = false;
+      return false;
     }
   }
 
   Future<bool> isLoggedIn() async {
-    final token = await this._storage.read(key: 'token');
-    
-    final resp = await http.get('${ Enviroments.apiUrl }/authenticate/refresh', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': "Bearer $token"
+    try {
+
+      final token = await this._storage.read(key: 'token');
+      final _dio = createDioInstance( token );
+
+      Response response = await _dio.get('/authenticate/refresh');
+
+      if ( response.statusCode == 200){
+        
+        AuthResponse loginResponse = AuthResponse.fromMap( response.data );
+
+        this.user = loginResponse.user;
+        
+        await this._guardarToken(loginResponse.token);
+
+        return true;
+      } else {
+        this._eliminarToken();
+        return false;
       }
-    );
 
-    if ( resp.statusCode == 200){
-      final loginResponse = authResponseFromJson( resp.body );
-      this.user = loginResponse.user;
-      
-      await this._guardarToken(loginResponse.token);
-
-      return true;
-    } else {
-      this._eliminarToken();
+    } catch (e) {
+      // TODO: En caso de no poder logearse deberia notificar al usuario por X error
       return false;
     }
   }
