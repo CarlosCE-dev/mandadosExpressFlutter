@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
+// Lib
+import 'package:provider/provider.dart';
+
 // Services
-// import 'package:mandados_express/src/services/auth_service.dart';
-// import 'package:mandados_express/src/services/room_service.dart';
+import 'package:mandado_express_dev/services/roomService.dart';
+import 'package:mandado_express_dev/services/authService.dart';
 
 // Theme
 import 'package:mandado_express_dev/theme/theme.dart';
 
 // Router
-import 'package:provider/provider.dart';
+import 'package:mandado_express_dev/routes/routes.dart';
 
 void main() => runApp( MyApp());
 
@@ -21,15 +24,15 @@ class MyApp extends StatelessWidget {
     
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider( create: (_) => AuthService() ),
-        // ChangeNotifierProvider( create: (_) => RoomService() ),
+        ChangeNotifierProvider( create: (_) => AuthService() ),
+        ChangeNotifierProvider( create: (_) => RoomService() ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme.customTheme,
         title: 'Delivery App',
         initialRoute: 'loading',
-        // routes: appRoutes,
+        routes: appRoutes,
       ),
     );
   }
