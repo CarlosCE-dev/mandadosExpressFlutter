@@ -64,33 +64,32 @@ class AuthService with ChangeNotifier {
   // [email]
   Future<bool> login( String email, String password ) async {
     try {
-    this.autenticando = true;
+      this.autenticando = true;
 
-    final _dio = createDioInstance("");
+      final _dio = createDioInstance("");
 
-    final payload = {
-      'email': email,
-      'password': password
-    };
+      final payload = {
+        'email': email,
+        'password': password
+      };
 
-    Response response = await _dio.post('/authenticate/login',
-        data: jsonEncode(payload), 
-    );
+      Response response = await _dio.post('/authenticate/login',
+          data: jsonEncode(payload), 
+      );
 
+      this.autenticando = false;
 
-    this.autenticando = false;
+      if ( response.statusCode == 200){
 
-    if ( response.statusCode == 200){
+        AuthResponse loginResponse = AuthResponse.fromMap( response.data );
+        this.user = loginResponse.user;
 
-      AuthResponse loginResponse = AuthResponse.fromMap( response.data );
-      this.user = loginResponse.user;
+        await this._guardarToken(loginResponse.token);
 
-      await this._guardarToken(loginResponse.token);
-
-      return true;
-    } else {
-      return false;
-    }
+        return true;
+      } else {
+        return false;
+      }
 
     } catch (e) {
       // TODO: En caso de no poder logearse deberia notificar al usuario por X error

@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
-String getRandString(int len) {
-  var random = Random.secure();
-  var values = List<int>.generate(len, (i) =>  random.nextInt(255));
-  return base64UrlEncode(values);
-}
+// Flutter
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+// Helpers
+part 'showAlert.dart';
+part 'getRandomString.dart';
+

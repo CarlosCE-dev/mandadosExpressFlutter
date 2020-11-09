@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mandado_express_dev/models/responses/userResponse.dart';
-import 'package:mandado_express_dev/models/user.dart';
 import 'package:mandado_express_dev/services/roomService.dart';
 import 'package:mandado_express_dev/theme/colors.dart';
 import 'package:provider/provider.dart';
