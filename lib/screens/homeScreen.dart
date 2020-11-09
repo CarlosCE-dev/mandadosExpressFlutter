@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mandado_express_dev/services/authService.dart';
-import 'package:mandado_express_dev/services/signalRService.dart';
 
 // Lib
 import 'package:provider/provider.dart';
@@ -18,32 +17,12 @@ import 'package:mandado_express_dev/services/roomService.dart';
 // Models
 import 'package:mandado_express_dev/models/responses/roomResponse.dart';
 
-class HomeScreen extends StatefulWidget {
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-  @override
-  void initState() {
-    final signalRService = Provider.of<SignalRService>(context, listen: false);
-    signalRService.connect();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
+class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
     final roomService = Provider.of<RoomService>(context);
-    
     
     return Scaffold(
       appBar: AppBar(

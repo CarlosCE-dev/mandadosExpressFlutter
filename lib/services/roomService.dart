@@ -108,4 +108,10 @@ class RoomService with ChangeNotifier {
       return [];
     }
   }
+
+
+  addMessage( RoomMessage message ){
+    this.chat.roomMessages.insert(0, message);
+    notifyListeners();
+  }
 }

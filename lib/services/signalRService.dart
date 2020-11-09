@@ -15,7 +15,11 @@ class SignalRService with ChangeNotifier {
 
   HubConnection _signalR;
 
+  HubConnection get signalRConnection => this._signalR;
+
   void connect() async {
+
+    final token = await AuthService.getToken();
 
     // Configer the logging
     Logger.root.level = Level.ALL;
@@ -24,16 +28,17 @@ class SignalRService with ChangeNotifier {
       print('${rec.level.name}: ${rec.time}: ${rec.message}');
     });
 
+    final hubProtLogger = Logger("SignalR - hub");
+
     // If youn want to also to log out transport messages:
     final transportProtLogger = Logger("SignalR - transport");
 
     // Creates the connection by using the HubConnectionBuilder.
-    this._signalR = HubConnectionBuilder().withUrl("${ Enviroments.socketUrl }/chatHub",
+    this._signalR = HubConnectionBuilder().withUrl("${ Enviroments.socketUrl }/chatHub?token=$token",
       options: HttpConnectionOptions(
-        accessTokenFactory: () async => await getAccessToken(),
         logger: transportProtLogger,
       )
-    ).build();
+    ).configureLogging(hubProtLogger).build();
 
     await this._signalR.start().then( (_) {
         print("OnConnect");
@@ -44,9 +49,8 @@ class SignalRService with ChangeNotifier {
     });
   }
 
-  Future<String> getAccessToken() async {
-    final token = await AuthService.getToken();
-    return token;
+  void disconnect(){
+    // TODO: Desconectar
   }
  
 

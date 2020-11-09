@@ -1,19 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mandado_express_dev/models/view/chatViewModel.dart';
+import 'package:mandado_express_dev/models/view/messageViewModel.dart';
 import 'package:mandado_express_dev/services/authService.dart';
 import 'package:mandado_express_dev/services/roomService.dart';
+import 'package:mandado_express_dev/services/signalRService.dart';
 import 'package:mandado_express_dev/theme/colors.dart';
 import 'package:provider/provider.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+
+  SignalRService signalRService;
+  RoomService roomService;
+
+  @override
+  void initState() {
+    super.initState();
+    this.signalRService = Provider.of<SignalRService>(context, listen: false );
+    this.roomService = Provider.of<RoomService>(context, listen: false );
+
+    signalRService.signalRConnection.invoke("JoinRoom", args: <Object>[ roomService.chat.id ]).then((_){
+      
+      this.signalRService.signalRConnection.on("ReceiveMessage", _escucharMensaje );
+
+    });
+  }
+
+  void _escucharMensaje( dynamic data ){
+
+    RoomMessage newMessage = new RoomMessage(
+      body: data[0],
+      userId: this.roomService.chat.userId,
+      createOn: new DateTime.now()
+    );
+
+    this.roomService.addMessage( newMessage );
+
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final chatList = Provider.of<RoomService>(context).chat;
     
-
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -282,9 +317,11 @@ class _MessageComposerState extends State<MessageComposer> {
             color: Theme.of(context).primaryColor,
             onPressed: () {
               if ( messageController.text != "" ) {
-                // final messageList = Provider.of<MessageListProvider>(context, listen: false );
-                // messageList.addMessage = messageController.text;
-                // messageController.clear();
+                final signalRService = Provider.of<SignalRService>(context, listen: false );
+                final roomService = Provider.of<RoomService>(context, listen: false );
+                signalRService.signalRConnection.invoke("SendMessage", args: <Object>[
+                  roomService.chat.id, roomService.chat.userId , messageController.text,
+                ]);
               }
             },
           ),

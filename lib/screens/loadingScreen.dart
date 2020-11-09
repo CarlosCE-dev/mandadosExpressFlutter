@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Lib
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mandado_express_dev/services/signalRService.dart';
 import 'package:provider/provider.dart';
 
 // Services
@@ -59,13 +60,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future checkLoginState( BuildContext context ) async {
 
     final authService = Provider.of<AuthService>(context, listen: false );
-    
+    final signalRService = Provider.of<SignalRService>(context,listen: false);
+
     await Future.delayed(Duration( seconds: 3 ) );
 
     final autenticado = await authService.isLoggedIn();
 
     if ( autenticado ){
-      // TODO: Conectar al socket server
+      signalRService.connect();
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(

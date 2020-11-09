@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // Lib
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/services.dart';
+import 'package:mandado_express_dev/services/signalRService.dart';
 import 'package:provider/provider.dart';
 
 // Theme
@@ -38,7 +39,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Logo(
-                  titulo: "Login",
+                  titulo: "Login 2",
                   color: CustomColors.primary
                 ),
                 _Form(),
@@ -73,12 +74,10 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context, listen: false );
+    final signalRService = Provider.of<SignalRService>(context, listen: false );
 
     emailCtrl.text = authService.user.email;
     passCtrl.text = authService.user.password;
-
-    emailCtrl.text = "customer@customer.com";
-    passCtrl.text = "Tenco1234\$";
 
     return Container(
       margin: EdgeInsets.only( top:40 ),
@@ -130,8 +129,7 @@ class __FormState extends State<_Form> {
               
               final response = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
               if ( response ){
-                // TODO: Conectar a nuestro socket server
-                // TODO: Navegar a otra pantala
+                signalRService.connect();
                 Navigator.pushReplacementNamed(context, 'home');
               } else {
                 showAlert(context, 'Login incorrecto', 'Revise sus credenciales nuevamante');
