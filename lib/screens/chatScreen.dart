@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mandado_express_dev/models/view/chatViewModel.dart';
+import 'package:mandado_express_dev/models/viewModels/chatViewModel.dart';
 import 'package:mandado_express_dev/services/authService.dart';
 import 'package:mandado_express_dev/services/roomService.dart';
 import 'package:mandado_express_dev/services/signalRService.dart';

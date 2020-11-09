@@ -11,7 +11,7 @@ import 'package:mandado_express_dev/services/authService.dart';
 import 'package:mandado_express_dev/services/roomService.dart';
 
 // Models
-import 'package:mandado_express_dev/models/responses/roomResponse.dart';
+import 'package:mandado_express_dev/models/viewModels/roomResponse.dart';
 
 // Widgets
 import 'package:mandado_express_dev/widgets/home/widgets.dart';

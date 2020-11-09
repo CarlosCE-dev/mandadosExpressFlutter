@@ -8,9 +8,6 @@ import 'package:logging/logging.dart';
 // Services
 import 'package:mandado_express_dev/services/authService.dart';
 
-// Models
-
-
 class SignalRService with ChangeNotifier {
 
   HubConnection _signalR;

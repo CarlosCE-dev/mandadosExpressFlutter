@@ -1,6 +1,5 @@
-// Models
-// ViewModel
-import 'package:mandado_express_dev/models/view/validateResponse.dart';
+// View
+import 'package:mandado_express_dev/models/views/validateResponse.dart';
 
 /// Validate login form
 ValidateResponse validateLogin( String email, String password ){

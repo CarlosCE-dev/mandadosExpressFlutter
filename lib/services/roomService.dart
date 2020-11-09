@@ -8,11 +8,13 @@ import 'package:http/http.dart' as http;
 // Environments
 import 'package:mandado_express_dev/global/environments.dart';
 
-// Models
-import 'package:mandado_express_dev/models/responses/roomResponse.dart';
-import 'package:mandado_express_dev/models/responses/userResponse.dart';
-import 'package:mandado_express_dev/models/view/chatViewModel.dart';
+// Services
 import 'package:mandado_express_dev/services/authService.dart';
+
+// ViewModels
+import 'package:mandado_express_dev/models/viewModels/chatViewModel.dart';
+import 'package:mandado_express_dev/models/viewModels/roomResponse.dart';
+import 'package:mandado_express_dev/models/viewModels/userResponse.dart';
 
 class RoomService with ChangeNotifier {
 

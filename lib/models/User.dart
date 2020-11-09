@@ -10,11 +10,17 @@ class User {
         this.password,
     });
 
+    /// User id
     String id;
+    /// User first name
     String firstName;
+    /// User last name
     String lastName;
+    /// Email of user
     String email;
+    /// Full Name of user
     String fullName;
+    /// User password
     String password;
 
     factory User.fromJson(String str) => User.fromMap(json.decode(str));

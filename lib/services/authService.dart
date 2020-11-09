@@ -1,18 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 // Lib
-import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 
 // Environments
 import 'package:mandado_express_dev/global/environments.dart';
 
+// ViewModels
+import 'package:mandado_express_dev/models/viewModels/authResponse.dart';
+
 // Models
 import 'package:mandado_express_dev/models/user.dart';
-import 'package:mandado_express_dev/models/responses/authResponse.dart';
 
 class AuthService with ChangeNotifier {
 
@@ -21,7 +21,7 @@ class AuthService with ChangeNotifier {
 
   final _storage = FlutterSecureStorage();
 
-  Dio createDioInstance( String token ){
+  Dio createDioInstance({ token = "" }){
     BaseOptions options = new BaseOptions(
       baseUrl: Enviroments.apiUrl,
       connectTimeout: 5000,
@@ -61,12 +61,12 @@ class AuthService with ChangeNotifier {
     await _storage.delete(key: 'token');
   }
 
-  // [email]
+  // Login
   Future<bool> login( String email, String password ) async {
     try {
       this.autenticando = true;
 
-      final _dio = createDioInstance("");
+      final _dio = createDioInstance();
 
       final payload = {
         'email': email,
@@ -98,6 +98,7 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  // Register
   Future register( String firstName, String lastName, String email,  String password ) async {
     try {
 
@@ -111,7 +112,7 @@ class AuthService with ChangeNotifier {
         "confirmPassword" : password
       };
 
-      final _dio = createDioInstance("");
+      final _dio = createDioInstance();
 
       Response response = await _dio.post('/authenticate/register',
         data: jsonEncode(payload), 
@@ -144,11 +145,11 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  // Verify token
   Future<bool> isLoggedIn() async {
     try {
 
-      final token = await this._storage.read(key: 'token');
-      final _dio = createDioInstance( token );
+      final _dio = createDioInstance( token: await this._storage.read(key: 'token') );
 
       Response response = await _dio.get('/authenticate/refresh');
 
@@ -178,10 +179,12 @@ class AuthService with ChangeNotifier {
     this.user = new User();
   }
 
+  // Guardar token
   Future _guardarToken( String token ) async {
       return await _storage.write(key: 'token', value: token);
   }
 
+  // Eliminar token
   Future _eliminarToken() async {
     await _storage.delete(key: 'token');
   }

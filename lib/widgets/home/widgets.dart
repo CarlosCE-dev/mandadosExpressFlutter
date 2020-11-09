@@ -10,11 +10,11 @@ import 'package:provider/provider.dart';
 // Helpers
 import 'package:mandado_express_dev/helpers/helpers.dart';
 
-// Model
+// Services
 import 'package:mandado_express_dev/services/roomService.dart';
 
-// Model
-import 'package:mandado_express_dev/models/responses/roomResponse.dart';
+// viewModel
+import 'package:mandado_express_dev/models/viewModels/roomResponse.dart';
 
 // Widgets
 part 'customListItem.dart';
